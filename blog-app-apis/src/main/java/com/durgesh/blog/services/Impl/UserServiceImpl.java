@@ -67,7 +67,12 @@ public class UserServiceImpl implements UserServices {
 //		userRepo.saveAll(userdto);
 		return null;
 	}
-	         
+	       
+	
+	public int Addition() {
+		return 0;
+		
+	}
 	
 	private User dtoToUser(UserDto userDto) {
 
