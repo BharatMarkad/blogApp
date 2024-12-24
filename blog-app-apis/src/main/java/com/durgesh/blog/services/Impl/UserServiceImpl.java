@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.durgesh.blog.*;
 import com.durgesh.blog.entites.User;
 import com.durgesh.blog.exceptions.ResourceNotFoundException;
 import com.durgesh.blog.payloads.UserDto;
@@ -18,6 +19,9 @@ public class UserServiceImpl implements UserServices {
 
 	@Autowired
 	private UserRepo userRepo;
+	
+	@Autowired
+	private  ModelMapper modelMapper;
 
 	@Override
 	public UserDto createUser(UserDto userDto) {
@@ -69,31 +73,30 @@ public class UserServiceImpl implements UserServices {
 	}
 	       
 	
-	public int Addition() {
-		return 0;
-		
-	}
 	
 	private User dtoToUser(UserDto userDto) {
 
-		User us = new User();
-		us.setId(userDto.getId());
-		us.setName(userDto.getName());
-		us.setEmail(userDto.getEmail());
-		us.setPassword(userDto.getPassword());
-		us.setAbout(userDto.getAbout());
+		User us = modelMapper.map(userDto, User.class);
+		/* User us = new User();
+		 * us.setId(userDto.getId()); us.setName(userDto.getName());
+		 * us.setEmail(userDto.getEmail()); us.setPassword(userDto.getPassword());
+		 * us.setAbout(userDto.getAbout());
+		 */
 		return us;
 
 	}
 
 	public UserDto userToDto(User user) {
 
-		UserDto dto = new UserDto();
-		dto.setId(user.getId());
-		dto.setName(user.getName());
-		dto.setEmail(user.getEmail());
-		dto.setPassword(user.getPassword());
-		dto.setAbout(user.getAbout());
+//		UserDto dto = modelMapper.map(user, UserDto.class);
+		
+		  UserDto dto = new UserDto();
+		  dto.setId(user.getId());
+		  dto.setName(user.getName());
+		  dto.setEmail(user.getEmail());
+		  dto.setPassword(user.getPassword()); 
+		  dto.setAbout(user.getAbout());
+		 
 		return dto;
              }
 
