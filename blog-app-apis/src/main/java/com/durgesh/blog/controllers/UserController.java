@@ -19,6 +19,8 @@ import com.durgesh.blog.payloads.ApiResponse;
 import com.durgesh.blog.payloads.UserDto;
 import com.durgesh.blog.services.UserServices;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -27,7 +29,7 @@ public class UserController {
 	private UserServices userServices;
 
 	@PostMapping("/createUser")
-	public ResponseEntity<UserDto> createUserR(@RequestBody UserDto userDto) {
+	public ResponseEntity<UserDto> createUserR(@Valid @RequestBody UserDto userDto) {
 		UserDto saveUser = userServices.createUser(userDto);
 		return new ResponseEntity<UserDto>(saveUser, HttpStatus.CREATED);
 	}
@@ -39,7 +41,7 @@ public class UserController {
 	}
 
 	@PutMapping("/updateUser/{userId}")
-	public ResponseEntity<UserDto> updateUserR(@RequestBody UserDto userDto, @PathVariable Integer userId) {
+	public ResponseEntity<UserDto> updateUserR(@Valid @RequestBody UserDto userDto, @PathVariable Integer userId) {
 		UserDto updateUser = userServices.updateUser(userDto, userId);
 		return new ResponseEntity<UserDto>(updateUser, HttpStatus.OK);
 
