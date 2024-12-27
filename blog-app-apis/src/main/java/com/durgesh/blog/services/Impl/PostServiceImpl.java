@@ -1,12 +1,14 @@
 package com.durgesh.blog.services.Impl;
 
-import java.sql.Date;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.durgesh.blog.entites.Category;
@@ -71,10 +73,15 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDto> getAllPost() {
-		List<Post> all = postRepository.findAll();
+	public List<PostDto> getAllPost(Integer pageNumber , Integer pageSize) {
+		
+		 Pageable pageable = PageRequest.of(pageNumber,pageSize);
+				
+		 Page<Post> page = postRepository.findAll(pageable);
+		 
+		 List<Post> list = page.getContent();
 
-		List<PostDto> collect = all.stream().map((pp) -> modelMapper.map(pp, PostDto.class))
+		List<PostDto> collect = list.stream().map((pp) -> modelMapper.map(pp, PostDto.class))
 				.collect(Collectors.toList());
 
 		return collect;
@@ -96,7 +103,7 @@ public class PostServiceImpl implements PostService {
 		
 		User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "User Id", userId));
 		
-		List<Post> postByUser = this.postRepository.findPostByUser(user);
+		List<Post> postByUser = this.postRepository.findByUser(user);
 		
 		List<PostDto> collect = postByUser.stream().map((us)-> this.modelMapper.map(us, PostDto.class)).collect(Collectors.toList());
 		return collect;
