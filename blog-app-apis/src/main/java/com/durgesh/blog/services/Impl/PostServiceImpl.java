@@ -1,6 +1,5 @@
 package com.durgesh.blog.services.Impl;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,13 +74,13 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDto> getAllPost(Integer pageNumber , Integer pageSize) {
-		
-		 Pageable pageable = PageRequest.of(pageNumber,pageSize);
-				
-		 Page<Post> page = postRepository.findAll(pageable);
-		 
-		 List<Post> list = page.getContent();
+	public List<PostDto> getAllPost(Integer pageNumber, Integer pageSize) {
+
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+		Page<Post> page = postRepository.findAll(pageable);
+
+		List<Post> list = page.getContent();
 
 		List<PostDto> collect = list.stream().map((pp) -> modelMapper.map(pp, PostDto.class))
 				.collect(Collectors.toList());
@@ -102,23 +101,25 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public List<PostDto> getPostByUser(Integer userId) {
-		
-		User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "User Id", userId));
-		
+
+		User user = this.userRepo.findById(userId)
+				.orElseThrow(() -> new ResourceNotFoundException("User", "User Id", userId));
+
 		List<Post> postByUser = this.postRepository.findByUser(user);
-		
-		List<PostDto> collect = postByUser.stream().map((us)-> this.modelMapper.map(us, PostDto.class)).collect(Collectors.toList());
+
+		List<PostDto> collect = postByUser.stream().map((us) -> this.modelMapper.map(us, PostDto.class))
+				.collect(Collectors.toList());
 		return collect;
 	}
 
 	@Override
 	public PostResponse getAllPostWithDetails(Integer pageNumber, Integer pageSize, String sortBy) {
-		
-		 Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
-			
-		 Page<Post> page = postRepository.findAll(pageable);
-		 
-		 List<Post> list = page.getContent();
+
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+
+		Page<Post> page = postRepository.findAll(pageable);
+
+		List<Post> list = page.getContent();
 
 		List<PostDto> postDto = list.stream().map((pp) -> modelMapper.map(pp, PostDto.class))
 				.collect(Collectors.toList());
@@ -130,10 +131,18 @@ public class PostServiceImpl implements PostService {
 		postResponse.setTotalPage(page.getTotalPages());
 		postResponse.setTotalElements(page.getTotalElements());
 		postResponse.setLastPage(page.isLast());
-		
-		
-//		return collect;
+
 		return postResponse;
+	}
+
+	@Override
+	public List<PostDto> getSearchPosts(String Keyword) {
+		List<Post> posts = postRepository.searchByTitle("%" + Keyword + "%");
+
+		List<PostDto> postDtos = posts.stream().map((post) -> this.modelMapper.map(post, PostDto.class))
+				.collect(Collectors.toList());
+		return postDtos;
+		
 	}
 
 }

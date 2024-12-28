@@ -22,4 +22,7 @@ public interface PostService {
 	public List<PostDto> getPostByUser(Integer userId);
 	
 	public PostResponse getAllPostWithDetails(Integer pageNumber, Integer pageSize, String sortBy );
+	
+	public List<PostDto> getSearchPosts(String Keyword);
+	
 }
