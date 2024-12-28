@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.durgesh.blog.entites.Category;
@@ -16,6 +17,7 @@ import com.durgesh.blog.entites.Post;
 import com.durgesh.blog.entites.User;
 import com.durgesh.blog.exceptions.ResourceNotFoundException;
 import com.durgesh.blog.payloads.PostDto;
+import com.durgesh.blog.payloads.PostResponse;
 import com.durgesh.blog.repository.CategoryRepository;
 import com.durgesh.blog.repository.PostRepository;
 import com.durgesh.blog.repository.UserRepo;
@@ -107,6 +109,31 @@ public class PostServiceImpl implements PostService {
 		
 		List<PostDto> collect = postByUser.stream().map((us)-> this.modelMapper.map(us, PostDto.class)).collect(Collectors.toList());
 		return collect;
+	}
+
+	@Override
+	public PostResponse getAllPostWithDetails(Integer pageNumber, Integer pageSize, String sortBy) {
+		
+		 Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+			
+		 Page<Post> page = postRepository.findAll(pageable);
+		 
+		 List<Post> list = page.getContent();
+
+		List<PostDto> postDto = list.stream().map((pp) -> modelMapper.map(pp, PostDto.class))
+				.collect(Collectors.toList());
+
+		PostResponse postResponse = new PostResponse();
+		postResponse.setContent(postDto);
+		postResponse.setPageNumber(page.getNumber());
+		postResponse.setPageSize(page.getSize());
+		postResponse.setTotalPage(page.getTotalPages());
+		postResponse.setTotalElements(page.getTotalElements());
+		postResponse.setLastPage(page.isLast());
+		
+		
+//		return collect;
+		return postResponse;
 	}
 
 }

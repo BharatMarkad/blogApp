@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.durgesh.blog.entites.Post;
 import com.durgesh.blog.payloads.PostDto;
+import com.durgesh.blog.payloads.PostResponse;
 
 public interface PostService {
 
@@ -19,4 +20,6 @@ public interface PostService {
 	public List<PostDto> getPostByCategory(Integer categoryId);
 	
 	public List<PostDto> getPostByUser(Integer userId);
+	
+	public PostResponse getAllPostWithDetails(Integer pageNumber, Integer pageSize, String sortBy );
 }
